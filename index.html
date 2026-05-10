@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SMART GRADE - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMART GRADE">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f3b48">
+<link rel="apple-touch-icon" href="icon.svg">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  
+  <div class="app-container">
+    <div class="mobile-header">
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+      <div class="header-logo">
+        <i class="fas fa-book-open"></i>
+        <span>SMART GRADE</span>
+      </div>
+      <div class="theme-btn-header" id="themeBtn">
+        <i class="fas fa-palette"></i>
+        <span>Theme</span>
+      </div>
+    </div>
+
+    <div class="sheet-overlay" id="sheetOverlay"></div>
+    <div class="bottom-sheet" id="bottomSheet">
+      <div class="bottom-sheet-header">
+        <h3><i class="fas fa-brush"></i> Choose Theme</h3>
+        <button class="close-sheet" id="closeSheet"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="bottom-sheet-content">
+        <div class="theme-grid-rect" id="themeGrid"></div>
+        <div class="font-row-sheet">
+          <div class="font-sheet" data-font="small">A<sup>-</sup> Small</div>
+          <div class="font-sheet" data-font="medium">A Medium</div>
+          <div class="font-sheet" data-font="large">A<sup>+</sup> Large</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-menu" id="sidebarMenu">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-graduation-cap"></i> MENU</h3>
+        <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-item active"><i class="fas fa-home"></i> Home</a>
+        <a href="login.html" class="nav-item"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="register.html" class="nav-item"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="guide.html" class="nav-item"><i class="fas fa-question-circle"></i> Guide</a>
+        <a href="about.html" class="nav-item"><i class="fas fa-info-circle"></i> About</a>
+      </nav>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <main class="main-content">
+      <div class="glass-card" style="text-align:center">
+        <i class="fas fa-chalkboard-user" style="font-size: 60px; color: var(--primary); margin-bottom: 16px;"></i>
+        <h1 class="gradient" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; color: transparent;">SMART GRADE</h1>
+        <p>GBHS FOUMBAN Form 4B Science</p>
+        <p style="font-size:0.7rem; margin-top:5px; color: var(--text-light);">Academic Year 2025-2026</p>
+      </div>
+
+      <div class="glass-card">
+        <h3><i class="fas fa-users"></i> Registered Students</h3>
+        <div id="studentsList" style="margin-top: 12px;"></div>
+      </div>
+
+      <div class="btn-group">
+        <a href="login.html" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="register.html" class="btn btn-secondary"><i class="fas fa-user-plus"></i> Create Account</a>
+      </div>
+    </main>
+  </div>
+
+  <div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #dc3545;"></i>
+      <h3>Delete Account</h3>
+      <p>Enter PIN to confirm deletion:</p>
+      <input type="password" id="deletePin" maxlength="4" placeholder="****">
+      <div class="modal-buttons">
+        <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn-confirm" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+  
+  <!-- PWA Install Prompt -->
+<div class="install-prompt" id="installPrompt">
+  <i class="fas fa-mobile-alt"></i>
+  <div class="install-prompt-text">
+    <h4>Install SMART GRADE</h4>
+    <p>Add this app to your home screen for quick access</p>
+  </div>
+  <button onclick="installApp()">Install</button>
+</div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    var pendingDeleteId = null;
+
+    function renderStudents() {
+      var students = getAllStudents();
+      var container = document.getElementById('studentsList');
+
+      if (students.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:20px;">' +
+          '<i class="fas fa-users-slash" style="font-size:30px; opacity:0.5;"></i>' +
+          '<p style="color: var(--text-light);">No registered accounts</p>' +
+          '<a href="register.html" style="color: var(--primary); font-size:0.8rem;">Create first account</a>' +
+          '</div>';
+        return;
+      }
+
+      container.innerHTML = students.map(function(s) {
+        return '<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">' +
+          '<div>' +
+          '<strong>' + s.name + '</strong><br>' +
+          '<small style="color: var(--text-light);">' + s.class + ' - #' + s.number + '</small>' +
+          '</div>' +
+          '<button class="delete-account-btn" onclick="showDeleteModal(' + s.id + ')">' +
+          '<i class="fas fa-trash"></i> Delete' +
+          '</button>' +
+          '</div>';
+      }).join('');
+    }
+
+    function showDeleteModal(id) {
+      pendingDeleteId = id;
+      document.getElementById('deleteModal').classList.add('active');
+      document.getElementById('deletePin').value = '';
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').classList.remove('active');
+      pendingDeleteId = null;
+    }
+
+    function confirmDelete() {
+      var pin = document.getElementById('deletePin').value;
+      var student = getStudentById(pendingDeleteId);
+
+      if (!student) {
+        showToast('Student not found');
+        closeDeleteModal();
+        return;
+      }
+
+      if (student.pin !== pin) {
+        showToast('Incorrect PIN');
+        closeDeleteModal();
+        return;
+      }
+
+      deleteStudent(pendingDeleteId);
+      renderStudents();
+      showToast(student.name + ' deleted');
+      closeDeleteModal();
+    }
+
+    // Initialize
+    renderStudents();
+    initMobileMenu();
+    initThemeSelector();
+
+    window.showDeleteModal = showDeleteModal;
+    window.closeDeleteModal = closeDeleteModal;
+    window.confirmDelete = confirmDelete;
+  </script>
+</body>
+</html>

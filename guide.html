@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SMART GRADE - Video Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMART GRADE">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f3b48">
+<link rel="apple-touch-icon" href="icon.svg">
+  <style>
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.4); transform: scale(1); }
+      50% { box-shadow: 0 0 0 20px rgba(255,255,255,0); transform: scale(1.05); }
+      100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); transform: scale(1); }
+    }
+    @keyframes iconBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes waveAnim {
+      0%, 100% { height: 80px; }
+      50% { height: 120px; }
+    }
+    @keyframes particleFloat {
+      0% { transform: translateY(100%) scale(1); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translateY(-100%) scale(0); opacity: 0; }
+    }
+    @keyframes modalSlideIn {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes floatParticle {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.5; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  
+  <div class="app-container">
+    <div class="mobile-header">
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+      <div class="header-logo">
+        <i class="fas fa-book-open"></i>
+        <span>VIDEO GUIDE</span>
+      </div>
+      <div class="theme-btn-header" id="themeBtn">
+        <i class="fas fa-palette"></i>
+        <span>Theme</span>
+      </div>
+    </div>
+
+    <div class="sheet-overlay" id="sheetOverlay"></div>
+    <div class="bottom-sheet" id="bottomSheet">
+      <div class="bottom-sheet-header">
+        <h3><i class="fas fa-brush"></i> Choose Theme</h3>
+        <button class="close-sheet" id="closeSheet"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="bottom-sheet-content">
+        <div class="theme-grid-rect" id="themeGrid"></div>
+        <div class="font-row-sheet">
+          <div class="font-sheet" data-font="small">A<sup>-</sup> Small</div>
+          <div class="font-sheet" data-font="medium">A Medium</div>
+          <div class="font-sheet" data-font="large">A<sup>+</sup> Large</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-menu" id="sidebarMenu">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-graduation-cap"></i> MENU</h3>
+        <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-item"><i class="fas fa-home"></i> Home</a>
+        <a href="login.html" class="nav-item"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="register.html" class="nav-item"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="dashboard.html" class="nav-item"><i class="fas fa-chalkboard-user"></i> Dashboard</a>
+        <a href="guide.html" class="nav-item active"><i class="fas fa-video"></i> Video Guide</a>
+        <a href="about.html" class="nav-item"><i class="fas fa-info-circle"></i> About</a>
+      </nav>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <main class="main-content">
+      <!-- Hero -->
+      <div class="glass-card" style="text-align:center; background: linear-gradient(135deg, #1a1a2e, #0f0f23); color: white; position: relative; overflow: hidden;">
+        <div style="position: relative; z-index: 1;">
+          <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; animation: pulseGlow 2s infinite;">
+            <i class="fas fa-play" style="font-size: 40px; color: white;"></i>
+          </div>
+          <h2 style="color: white; margin-bottom: 8px;">Interactive Video Tutorials</h2>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Learn how to master SMART GRADE step by step</p>
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 30px; margin-top: 12px; font-size: 0.75rem;">
+            <i class="fas fa-clock"></i> 8 tutorials
+            <i class="fas fa-chalkboard-user" style="margin-left: 8px;"></i> Step by step
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapters -->
+      <div class="glass-card">
+        <h3><i class="fas fa-list-ol"></i> Tutorial Chapters</h3>
+        <p style="font-size: 0.7rem; color: var(--text-light); margin-bottom: 16px;">Click any chapter to watch the detailed video explanation</p>
+        <div id="stepsList"></div>
+      </div>
+
+      <!-- Video Modal -->
+      <div id="videoModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="width: 90%; max-width: 500px; background: var(--card-bg); border-radius: 28px; overflow: hidden; animation: modalSlideIn 0.4s ease;">
+          <div style="padding: 18px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; justify-content: space-between; align-items: center;">
+            <h3 id="modalTitle" style="color: white; font-size: 1.1rem; margin: 0;"></h3>
+            <button onclick="closeVideo()" style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;"><i class="fas fa-times"></i></button>
+          </div>
+          <div style="background: #0a0a15; min-height: 350px; position: relative; overflow: hidden;">
+            <div id="videoAnimation" style="position: relative; height: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <div id="particlesAnimation" style="position: absolute; width: 100%; height: 100%; overflow: hidden;"></div>
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(transparent, rgba(231,76,60,0.2)); animation: waveAnim 2s ease-in-out infinite;"></div>
+              <div style="text-align: center; padding: 30px; position: relative; z-index: 2;">
+                <div style="width: 70px; height: 70px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; animation: iconBounce 1s ease infinite;">
+                  <i id="videoIcon" class="fas fa-play" style="font-size: 35px; color: white;"></i>
+                </div>
+                <div style="color: white; line-height: 1.6;">
+                  <h3 id="stepTitle" style="color: white; margin-bottom: 10px;">Loading...</h3>
+                  <p id="stepDescription" style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Please wait</p>
+                </div>
+                <div id="videoTipBox" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; margin-top: 15px; display: inline-block;">
+                  <i class="fas fa-lightbulb" style="color: #f39c12;"></i>
+                  <span id="videoTip" style="color: rgba(255,255,255,0.8); font-size: 0.75rem;">Tip will appear here</span>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.3);">
+              <button onclick="prevVideo()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer; padding: 8px; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-backward-step"></i></button>
+              <button id="playPauseBtn" onclick="togglePlay()" style="background: var(--primary); border: none; color: white; font-size: 18px; cursor: pointer; padding: 8px; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-play"></i></button>
+              <button onclick="nextVideo()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer; padding: 8px; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-forward-step"></i></button>
+            </div>
+            <div style="height: 3px; background: rgba(255,255,255,0.2);">
+              <div id="videoProgressFill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); transition: width 0.1s linear;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tips -->
+      <div class="glass-card">
+        <h3><i class="fas fa-lightbulb"></i> Quick Tips</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px;">
+          <div style="background: rgba(0,0,0,0.02); border-radius: 16px; padding: 14px; text-align: center; border: 1px solid var(--border);">
+            <i class="fas fa-key" style="font-size: 22px; margin-bottom: 8px; color: var(--primary);"></i>
+            <span style="font-size: 0.7rem; display: block;">Your PIN is your password - keep it safe!</span>
+          </div>
+          <div style="background: rgba(0,0,0,0.02); border-radius: 16px; padding: 14px; text-align: center; border: 1px solid var(--border);">
+            <i class="fas fa-layer-group" style="font-size: 22px; margin-bottom: 8px; color: var(--primary);"></i>
+            <span style="font-size: 0.7rem; display: block;">Select different subjects per term in Settings</span>
+          </div>
+          <div style="background: rgba(0,0,0,0.02); border-radius: 16px; padding: 14px; text-align: center; border: 1px solid var(--border);">
+            <i class="fas fa-save" style="font-size: 22px; margin-bottom: 8px; color: var(--primary);"></i>
+            <span style="font-size: 0.7rem; display: block;">Grades save automatically when you click Save</span>
+          </div>
+          <div style="background: rgba(0,0,0,0.02); border-radius: 16px; padding: 14px; text-align: center; border: 1px solid var(--border);">
+            <i class="fas fa-palette" style="font-size: 22px; margin-bottom: 8px; color: var(--primary);"></i>
+            <span style="font-size: 0.7rem; display: block;">20 themes available in top right corner</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script>
+    // ============================================
+    // ALL CODE IS SELF-CONTAINED - NO EXTERNAL JS NEEDED
+    // ============================================
+
+    // ---------- THEMES ----------
+    var THEMES = [
+      { name: 'default', color: '#0f3b48', label: 'Deep Teal' },
+      { name: 'crimson', color: '#c0392b', label: 'Crimson' },
+      { name: 'forest', color: '#1e8449', label: 'Forest' },
+      { name: 'ocean', color: '#006994', label: 'Ocean' },
+      { name: 'royal', color: '#6c3483', label: 'Royal' },
+      { name: 'sunset', color: '#d35400', label: 'Sunset' },
+      { name: 'rose', color: '#c44569', label: 'Rose' },
+      { name: 'turquoise', color: '#00897b', label: 'Turquoise' },
+      { name: 'amber', color: '#b7950b', label: 'Amber' },
+      { name: 'graphite', color: '#455a64', label: 'Graphite' },
+      { name: 'lavender', color: '#7b1fa2', label: 'Lavender' },
+      { name: 'cherry', color: '#b71c1c', label: 'Cherry' },
+      { name: 'midnight', color: '#1a237e', label: 'Midnight' },
+      { name: 'mint', color: '#00b894', label: 'Mint' },
+      { name: 'coral', color: '#e74c3c', label: 'Coral' },
+      { name: 'indigo', color: '#283593', label: 'Indigo' },
+      { name: 'chocolate', color: '#5d4037', label: 'Chocolate' },
+      { name: 'electric', color: '#6a1b9a', label: 'Electric' },
+      { name: 'steel', color: '#37474f', label: 'Steel' },
+      { name: 'lime', color: '#558b2f', label: 'Lime' }
+    ];
+
+    // ---------- TUTORIAL DATA ----------
+    var TUTORIALS = [
+      {
+        icon: 'fa-user-plus',
+        title: '1. Create an Account',
+        description: 'Step by step guide to register your student account',
+        steps: [
+          'From the Home page, click Register in the menu',
+          'Enter your full name as it appears on school records',
+          'Select your class: B1 or B2',
+          'Enter your student number (unique in your class)',
+          'Create a 4-digit PIN - memorize it!',
+          'Confirm your PIN and click Create Account',
+          'Your account is created! All 14 subjects are pre-selected'
+        ],
+        tip: 'Write down your PIN somewhere safe. You will need it every time you login.'
+      },
+      {
+        icon: 'fa-sign-in-alt',
+        title: '2. Login Methods',
+        description: 'Two ways to access your account: PIN or Fingerprint',
+        steps: [
+          'Go to Login page from the menu',
+          'Method 1 - PIN: Select your name and enter your 4-digit PIN',
+          'Method 2 - Fingerprint: Tap the fingerprint icon',
+          'If multiple accounts: select yours from dropdown',
+          'After fingerprint scan, click Sign In',
+          'You will be redirected to your Dashboard'
+        ],
+        tip: 'Fingerprint lets you skip the PIN! Just select your account after scanning.'
+      },
+      {
+        icon: 'fa-sliders-h',
+        title: '3. Select Subjects by Term',
+        description: 'Choose different subjects for Term 1, 2, and 3',
+        steps: [
+          'Go to Settings page',
+          'Click the Term tabs: Term 1, Term 2, Term 3',
+          'Check/uncheck subjects for that specific term',
+          'You can have DIFFERENT subjects in each term',
+          'Adjust coefficients (1-10) for each subject',
+          'Must select 10 to 14 subjects per term',
+          'Click Save Selection when done'
+        ],
+        tip: 'Each term can have different subjects! Perfect if you drop Economics in Term 2.'
+      },
+      {
+        icon: 'fa-pen-fancy',
+        title: '4. Add Your Grades',
+        description: 'Enter grades for all 6 sequences across 3 terms',
+        steps: [
+          'Go to Add Grade page',
+          'Select the Term tab: Term 1, 2 or 3',
+          'Term 1: enter grades for Sequence 1 and Sequence 2',
+          'Term 2: enter grades for Sequence 3 and Sequence 4',
+          'Term 3: enter grades for Sequence 5 and Sequence 6',
+          'Each grade must be between 0 and 20',
+          'Term Avg column shows automatic calculation',
+          'Click Save All Grades to store everything'
+        ],
+        tip: 'Only subjects selected for that term appear in the table. Decimals allowed: 14.5'
+      },
+      {
+        icon: 'fa-chalkboard-user',
+        title: '5. Dashboard Overview',
+        description: 'Your main hub for grades, goals, and progress',
+        steps: [
+          'Motivation Card: Random inspirational quote each visit',
+          'Stats Grid: Overall average, total grades, subjects, badges',
+          'Goal Slider: Set your target average (10-20)',
+          'Term Cards: Quick view of Term 1, 2, 3, and Yearly',
+          'Progress Chart: Visual line chart of your 3 terms',
+          'Subjects Preview: Top 5 subjects by average',
+          'Danger Alert: Red warning if any subject is below 10/20'
+        ],
+        tip: 'Click any Term Card to jump directly to that term detailed report.'
+      },
+      {
+        icon: 'fa-chart-line',
+        title: '6. View Reports and Statistics',
+        description: 'Detailed reports for each term and full year analysis',
+        steps: [
+          'Term 1,2,3 pages: Per-subject table with sequence averages',
+          'Yearly page: T1,T2,T3 + letter grades (A+ to F)',
+          'Grade Calculator: Find what you need to reach your target',
+          'Statistics page: Best/worst subject, doughnut chart',
+          'Bar Chart: Visual comparison of all subject performances',
+          'Predictions: AI-based recommendations for improvement'
+        ],
+        tip: 'Use the Grade Calculator in Yearly page to plan your remaining grades.'
+      },
+      {
+        icon: 'fa-medal',
+        title: '7. Achievements and Streaks',
+        description: 'Unlock 14 achievement badges + 4 streak badges',
+        steps: [
+          '14 Main Badges: First Grade, Perfect Score, High Average...',
+          '4 Streak Badges: 3-day, 7-day, 15-day, 30-day login streaks',
+          'Streaks update AUTOMATICALLY every day you open the app',
+          'Progress Bar: Shows how many badges you have unlocked',
+          'Badge Preview: Colored circles for quick visual reference',
+          'Locked badges = gray, Unlocked badges = colorful with date'
+        ],
+        tip: 'Open the app every day! Missing a day resets your streak counter to 1.'
+      },
+      {
+        icon: 'fa-mobile-alt',
+        title: '8. Install as App and Build APK',
+        description: 'Install SMART GRADE on your phone like a native app',
+        steps: [
+          'PWA Install: Look for the Install prompt at page bottom',
+          'Or Chrome menu (3 dots) > Add to Home Screen',
+          'Build APK: Settings > Build APK Package button',
+          'Download instructions file with step-by-step guide',
+          'Use pwabuilder.com to convert to a real APK file',
+          'Install the APK on any Android device',
+          'The app works 100% offline after installation!'
+        ],
+        tip: 'Installed app opens in full screen without browser bars - like a real app!'
+      }
+    ];
+
+    // ---------- VIDEO STATE ----------
+    var currentIndex = 0;
+    var isPlaying = false;
+    var progress = 0;
+    var interval = null;
+    var stepInterval = null;
+    var currentStep = 0;
+
+    // ---------- TOAST ----------
+    function showToast(msg) {
+      var container = document.getElementById('toastContainer');
+      var toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = '<i class="fas fa-info-circle"></i> ' + msg;
+      container.appendChild(toast);
+      setTimeout(function() { toast.remove(); }, 3000);
+    }
+
+    // ---------- PARTICLES ----------
+    function initParticles() {
+      var container = document.getElementById('particles');
+      if (!container) return;
+      container.innerHTML = '';
+      for (var i = 0; i < 30; i++) {
+        var p = document.createElement('div');
+        var size = Math.random() * 3 + 2;
+        p.style.cssText = 'position:absolute;width:' + size + 'px;height:' + size + 'px;background:var(--primary);border-radius:50%;left:' + (Math.random() * 100) + '%;top:' + (Math.random() * 100) + '%;opacity:' + (Math.random() * 0.3) + ';animation:floatParticle ' + (Math.random() * 15 + 10) + 's linear infinite;';
+        container.appendChild(p);
+      }
+    }
+
+    // ---------- THEME SELECTOR ----------
+    function initThemeSelector() {
+      var container = document.getElementById('themeGrid');
+      if (!container) return;
+
+      var savedTheme = localStorage.getItem('smartgrade_theme') || 'default';
+      container.innerHTML = '';
+      
+      THEMES.forEach(function(t) {
+        var div = document.createElement('div');
+        div.className = 'theme-rect' + (savedTheme === t.name ? ' active' : '');
+        div.setAttribute('data-theme', t.name);
+        div.style.background = t.color;
+        div.title = t.label;
+        div.textContent = t.label;
+        div.onclick = function() {
+          document.body.className = document.body.className.replace(/theme-\w+/g, '').trim();
+          document.body.classList.add('theme-' + t.name);
+          localStorage.setItem('smartgrade_theme', t.name);
+          document.querySelectorAll('.theme-rect').forEach(function(r) { r.classList.remove('active'); });
+          div.classList.add('active');
+          closeBottomSheet();
+          showToast('Theme: ' + t.label);
+        };
+        container.appendChild(div);
+      });
+
+      // Font buttons
+      var savedFont = localStorage.getItem('smartgrade_font') || 'medium';
+      document.querySelectorAll('.font-sheet').forEach(function(opt) {
+        if (opt.dataset.font === savedFont) opt.classList.add('active');
+        opt.onclick = function() {
+          var font = this.dataset.font;
+          localStorage.setItem('smartgrade_font', font);
+          document.body.classList.remove('font-small', 'font-medium', 'font-large');
+          document.body.classList.add('font-' + font);
+          document.querySelectorAll('.font-sheet').forEach(function(o) { o.classList.remove('active'); });
+          this.classList.add('active');
+          showToast('Font size: ' + font);
+        };
+      });
+
+      // Bottom sheet
+      var themeBtn = document.getElementById('themeBtn');
+      var bottomSheet = document.getElementById('bottomSheet');
+      var sheetOverlay = document.getElementById('sheetOverlay');
+      var closeSheet = document.getElementById('closeSheet');
+
+      if (themeBtn && bottomSheet && sheetOverlay) {
+        themeBtn.onclick = function() {
+          bottomSheet.classList.add('open');
+          sheetOverlay.classList.add('active');
+        };
+        
+        var closeFn = function() {
+          bottomSheet.classList.remove('open');
+          sheetOverlay.classList.remove('active');
+        };
+        
+        if (closeSheet) closeSheet.onclick = closeFn;
+        sheetOverlay.onclick = closeFn;
+      }
+    }
+
+    function closeBottomSheet() {
+      var bottomSheet = document.getElementById('bottomSheet');
+      var sheetOverlay = document.getElementById('sheetOverlay');
+      if (bottomSheet) bottomSheet.classList.remove('open');
+      if (sheetOverlay) sheetOverlay.classList.remove('active');
+    }
+
+    // ---------- MOBILE MENU ----------
+    function initMobileMenu() {
+      var menuBtn = document.getElementById('menuBtn');
+      var closeBtn = document.getElementById('closeSidebar');
+      var sidebar = document.getElementById('sidebarMenu');
+      var overlay = document.getElementById('overlay');
+
+      if (menuBtn && sidebar && overlay) {
+        menuBtn.onclick = function() {
+          sidebar.classList.add('open');
+          overlay.classList.add('active');
+        };
+        var closeFn = function() {
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        };
+        if (closeBtn) closeBtn.onclick = closeFn;
+        overlay.onclick = closeFn;
+      }
+    }
+
+    // ---------- RENDER CHAPTERS ----------
+    function renderSteps() {
+      var container = document.getElementById('stepsList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      TUTORIALS.forEach(function(tutorial, idx) {
+        var card = document.createElement('div');
+        card.className = 'glass-card';
+        card.style.cssText = 'cursor: pointer; transition: all 0.3s ease; border-left: 4px solid var(--primary); margin-bottom: 12px;';
+        card.onclick = function() { openVideo(idx); };
+
+        card.innerHTML =
+          '<div style="display: flex; align-items: center; gap: 16px;">' +
+          '<div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; flex-shrink: 0;">' +
+          '<i class="fas ' + tutorial.icon + '"></i>' +
+          '</div>' +
+          '<div style="flex: 1;">' +
+          '<div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">' + tutorial.title + '</div>' +
+          '<div style="font-size: 0.7rem; color: var(--text-light);">' + tutorial.description + '</div>' +
+          '<div style="font-size: 0.65rem; color: var(--primary); margin-top: 4px;">' + tutorial.steps.length + ' steps <i class="fas fa-chevron-right"></i></div>' +
+          '</div>' +
+          '<div style="width: 40px; height: 40px; background: rgba(0,0,0,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">' +
+          '<i class="fas fa-play" style="color: var(--primary); font-size: 0.8rem;"></i>' +
+          '</div>' +
+          '</div>';
+
+        container.appendChild(card);
+      });
+    }
+
+    // ---------- VIDEO PARTICLES ----------
+    function createVideoParticles() {
+      var container = document.getElementById('particlesAnimation');
+      if (!container) return;
+      container.innerHTML = '';
+      for (var i = 0; i < 40; i++) {
+        var particle = document.createElement('div');
+        particle.style.cssText =
+          'position:absolute;width:4px;height:4px;background:var(--primary);border-radius:50%;' +
+          'left:' + (Math.random() * 100) + '%;' +
+          'animation:particleFloat ' + (2 + Math.random() * 2) + 's linear infinite;' +
+          'animation-delay:' + (Math.random() * 3) + 's;opacity:0;';
+        container.appendChild(particle);
+      }
+    }
+
+    // ---------- UPDATE VIDEO ----------
+    function updateVideoContent() {
+      var tutorial = TUTORIALS[currentIndex];
+      document.getElementById('modalTitle').innerHTML = '<i class="fas ' + tutorial.icon + '"></i> ' + tutorial.title;
+      document.getElementById('stepTitle').textContent = tutorial.title;
+      document.getElementById('stepDescription').textContent = tutorial.description;
+      document.getElementById('videoIcon').className = 'fas ' + tutorial.icon;
+      document.getElementById('videoTip').textContent = tutorial.tip;
+
+      if (stepInterval) clearInterval(stepInterval);
+      currentStep = 0;
+
+      stepInterval = setInterval(function() {
+        if (currentStep < tutorial.steps.length) {
+          document.getElementById('stepDescription').innerHTML =
+            '<span style="color: var(--primary); font-weight: 600;">Step ' + (currentStep + 1) + '/' + tutorial.steps.length + ':</span> ' +
+            tutorial.steps[currentStep];
+          currentStep++;
+        } else {
+          clearInterval(stepInterval);
+        }
+      }, 2500);
+
+      createVideoParticles();
+    }
+
+    // ---------- OPEN ----------
+    function openVideo(index) {
+      currentIndex = index;
+      updateVideoContent();
+      document.getElementById('videoModal').style.display = 'flex';
+      resetVideo();
+      document.body.style.overflow = 'hidden';
+    }
+
+    // ---------- CLOSE ----------
+    function closeVideo() {
+      document.getElementById('videoModal').style.display = 'none';
+      document.body.style.overflow = '';
+      if (interval) clearInterval(interval);
+      if (stepInterval) clearInterval(stepInterval);
+      isPlaying = false;
+      progress = 0;
+      document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+    }
+
+    // ---------- RESET ----------
+    function resetVideo() {
+      if (interval) clearInterval(interval);
+      isPlaying = true;
+      progress = 0;
+      document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
+      updateProgress();
+
+      interval = setInterval(function() {
+        if (progress < 100) {
+          progress += 0.5;
+          updateProgress();
+        } else {
+          clearInterval(interval);
+          clearInterval(stepInterval);
+          if (currentIndex < TUTORIALS.length - 1) {
+            currentIndex++;
+            updateVideoContent();
+            progress = 0;
+            updateProgress();
+          } else {
+            isPlaying = false;
+            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+            showToast('Completed all tutorials!');
+            setTimeout(function() { closeVideo(); }, 2000);
+          }
+        }
+      }, 80);
+    }
+
+    // ---------- TOGGLE ----------
+    function togglePlay() {
+      if (isPlaying) {
+        if (interval) clearInterval(interval);
+        if (stepInterval) clearInterval(stepInterval);
+        isPlaying = false;
+        document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+      } else {
+        isPlaying = true;
+        document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
+        currentStep = 0;
+        stepInterval = setInterval(function() {
+          var t = TUTORIALS[currentIndex];
+          if (currentStep < t.steps.length) {
+            document.getElementById('stepDescription').innerHTML =
+              '<span style="color: var(--primary); font-weight: 600;">Step ' + (currentStep + 1) + '/' + t.steps.length + ':</span> ' +
+              t.steps[currentStep];
+            currentStep++;
+          } else { clearInterval(stepInterval); }
+        }, 2500);
+        interval = setInterval(function() {
+          if (progress < 100) { progress += 0.5; updateProgress(); }
+          else {
+            clearInterval(interval); clearInterval(stepInterval);
+            if (currentIndex < TUTORIALS.length - 1) { currentIndex++; updateVideoContent(); progress = 0; updateProgress(); }
+            else { isPlaying = false; document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>'; }
+          }
+        }, 80);
+      }
+    }
+
+    function prevVideo() {
+      if (currentIndex > 0) {
+        if (interval) clearInterval(interval);
+        if (stepInterval) clearInterval(stepInterval);
+        currentIndex--;
+        updateVideoContent();
+        progress = 0;
+        updateProgress();
+        isPlaying = true;
+        document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
+        resetVideo();
+      } else { showToast('First tutorial'); }
+    }
+
+    function nextVideo() {
+      if (currentIndex < TUTORIALS.length - 1) {
+        if (interval) clearInterval(interval);
+        if (stepInterval) clearInterval(stepInterval);
+        currentIndex++;
+        updateVideoContent();
+        progress = 0;
+        updateProgress();
+        isPlaying = true;
+        document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
+        resetVideo();
+      } else { showToast('Last tutorial'); }
+    }
+
+    function updateProgress() {
+      var fill = document.getElementById('videoProgressFill');
+      if (fill) fill.style.width = progress + '%';
+    }
+
+    // ============================================
+    // START EVERYTHING
+    // ============================================
+    var savedTheme = localStorage.getItem('smartgrade_theme') || 'default';
+    document.body.classList.add('theme-' + savedTheme);
+    var savedFont = localStorage.getItem('smartgrade_font') || 'medium';
+    document.body.classList.add('font-' + savedFont);
+
+    initParticles();
+    initThemeSelector();
+    initMobileMenu();
+    renderSteps();
+  </script>
+</body>
+</html>

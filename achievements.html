@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SMART GRADE - Achievements</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMART GRADE">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f3b48">
+<link rel="apple-touch-icon" href="icon.svg">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  
+  <div class="app-container">
+    <div class="mobile-header">
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+      <div class="header-logo">
+        <i class="fas fa-book-open"></i>
+        <span>ACHIEVEMENTS</span>
+      </div>
+      <div class="theme-btn-header" id="themeBtn">
+        <i class="fas fa-palette"></i>
+        <span>Theme</span>
+      </div>
+    </div>
+
+    <div class="sheet-overlay" id="sheetOverlay"></div>
+    <div class="bottom-sheet" id="bottomSheet">
+      <div class="bottom-sheet-header">
+        <h3><i class="fas fa-brush"></i> Choose Theme</h3>
+        <button class="close-sheet" id="closeSheet"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="bottom-sheet-content">
+        <div class="theme-grid-rect" id="themeGrid"></div>
+        <div class="font-row-sheet">
+          <div class="font-sheet" data-font="small">A<sup>-</sup> Small</div>
+          <div class="font-sheet" data-font="medium">A Medium</div>
+          <div class="font-sheet" data-font="large">A<sup>+</sup> Large</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-menu" id="sidebarMenu">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-graduation-cap"></i> MENU</h3>
+        <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><i class="fas fa-chalkboard-user"></i> Dashboard</a>
+        <a href="statistics.html" class="nav-item"><i class="fas fa-chart-pie"></i> Statistics</a>
+        <a href="achievements.html" class="nav-item active"><i class="fas fa-medal"></i> Achievements</a>
+        <a href="settings.html" class="nav-item"><i class="fas fa-sliders-h"></i> Settings</a>
+        <a href="#" class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </nav>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <main class="main-content">
+      <div class="glass-card achievement-progress-card">
+        <h3><i class="fas fa-trophy"></i> Your Progress</h3>
+        
+        <div class="progress-stats">
+          <div class="progress-stat">
+            <div class="progress-stat-value" id="unlockedCount">0</div>
+            <div class="progress-stat-label">Unlocked</div>
+          </div>
+          <div class="progress-stat">
+            <div class="progress-stat-value" id="lockedCount">14</div>
+            <div class="progress-stat-label">Locked</div>
+          </div>
+          <div class="progress-stat">
+            <div class="progress-stat-value" id="streakDays">0</div>
+            <div class="progress-stat-label">Day Streak</div>
+          </div>
+        </div>
+        
+        <div class="progress-bar-container">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill">0%</div>
+          </div>
+          <div class="progress-scale">
+            <span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span><span>12</span><span>14</span>
+          </div>
+        </div>
+        
+        <p id="progressText" style="margin-top: 12px;">0/14 achievements unlocked</p>
+        
+        <div id="badgePreview" style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:15px;"></div>
+      </div>
+
+      <div class="glass-card streak-section">
+        <h3><i class="fas fa-fire"></i> Daily Streak</h3>
+        <p style="font-size:0.7rem; color: var(--text-light); margin-bottom:12px;">
+          Current streak: <strong id="currentStreak">0</strong> days | 
+          Last login: <strong id="lastLoginDate">--</strong>
+        </p>
+        <p style="font-size:0.65rem; color: var(--text-light); margin-bottom:16px;">
+          <i class="fas fa-info-circle"></i> Streak updates automatically every day you open the app
+        </p>
+        <div id="streakList"></div>
+      </div>
+      
+      <div id="achievementsList"></div>
+    </main>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <div class="install-prompt" id="installPrompt">
+    <i class="fas fa-mobile-alt"></i>
+    <div class="install-prompt-text">
+      <h4>Install SMART GRADE</h4>
+      <p>Add this app to your home screen for quick access</p>
+    </div>
+    <button onclick="installApp()">Install</button>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    var currentUser = null;
+
+    var BADGE_ICONS = {
+      1: 'fa-pen', 2: 'fa-star', 3: 'fa-arrow-up', 4: 'fa-book-open',
+      5: 'fa-fire', 6: 'fa-graduation-cap', 7: 'fa-rocket', 8: 'fa-bolt',
+      9: 'fa-check-double', 10: 'fa-calendar-check', 11: 'fa-crown', 12: 'fa-chart-bar',
+      13: 'fa-trophy', 14: 'fa-medal'
+    };
+
+    var BADGE_COLORS = {
+      1: '#3498db', 2: '#f1c40f', 3: '#2ecc71', 4: '#9b59b6',
+      5: '#e74c3c', 6: '#1abc9c', 7: '#e67e22', 8: '#00bcd4',
+      9: '#27ae60', 10: '#8e44ad', 11: '#f39c12', 12: '#2980b9',
+      13: '#c0392b', 14: '#16a085'
+    };
+
+    function loadAchievements() {
+      currentUser = requireAuth();
+      if (!currentUser) return;
+
+      updateStreakOnVisit(currentUser.id);
+
+      var grades = getStudentGrades(currentUser.id);
+      var overall = calculateStudentOverallAverage(currentUser.id);
+      var saved = JSON.parse(localStorage.getItem('smartgrade_achievements_' + currentUser.id) || '[]');
+      var savedCount = saved.filter(function(a) { return a.unlocked; }).length;
+
+      var t1 = calculateStudentTermAverage(currentUser.id, 1);
+      var t2 = calculateStudentTermAverage(currentUser.id, 2);
+      var t3 = calculateStudentTermAverage(currentUser.id, 3);
+      var improvement12 = t2 > 0 && t1 > 0 ? roundToTwo(t2 - t1) : 0;
+      var improvement23 = t3 > 0 && t2 > 0 ? roundToTwo(t3 - t2) : 0;
+      var bestImprovement = Math.max(improvement12, improvement23);
+
+      var allTermsHaveGrades = (t1 > 0) && (t2 > 0) && (t3 > 0);
+
+      var hasSubjectMastery = false;
+      var allSubjects = getActiveSubjectsWithCoefficients(currentUser.id, getCurrentTerm());
+      allSubjects.forEach(function(s) {
+        var yearSum = 0, yearCount = 0;
+        for (var seq = 1; seq <= 6; seq++) {
+          var avg = getSubjectSequenceAverage(s.id, seq, grades);
+          if (avg > 0) { yearSum += avg; yearCount++; }
+        }
+        var yearAvg = yearCount > 0 ? roundToTwo(yearSum / yearCount) : 0;
+        if (yearAvg >= 15) hasSubjectMastery = true;
+      });
+
+      var currentTermSubjects = getActiveSubjectsWithCoefficients(currentUser.id, getCurrentTerm());
+      var allSubjectsComplete = currentTermSubjects.every(function(s) {
+        return grades.some(function(g) { return g.subjectId === s.id; });
+      });
+
+      var fullTermComplete = false;
+      currentTermSubjects.forEach(function(s) {
+        var hasAll = true;
+        for (var seq = 1; seq <= 6; seq++) {
+          if (!grades.some(function(g) { return g.subjectId === s.id && g.sequenceId === seq; })) {
+            hasAll = false;
+          }
+        }
+        if (hasAll) fullTermComplete = true;
+      });
+
+      var hasExcellentResult = grades.some(function(g) { return g.value >= 19.5; });
+      var hasPerfectScore = grades.some(function(g) { return g.value === 20; });
+
+      var updated = ACHIEVEMENTS.map(function(ach) {
+        var existing = saved.find(function(a) { return a.id === ach.id; });
+        var unlocked = false;
+
+        switch(ach.id) {
+          case 1: unlocked = grades.length > 0; break;
+          case 2: unlocked = hasPerfectScore; break;
+          case 3: unlocked = overall >= 12; break;
+          case 4: unlocked = grades.length >= 10; break;
+          case 5: unlocked = grades.length >= 30; break;
+          case 6: unlocked = savedCount >= 8; break;
+          case 7: unlocked = bestImprovement >= 1; break;
+          case 8: unlocked = allTermsHaveGrades; break;
+          case 9: unlocked = allSubjectsComplete; break;
+          case 10: unlocked = fullTermComplete; break;
+          case 11: unlocked = hasSubjectMastery; break;
+          case 12: unlocked = grades.length >= 25; break;
+          case 13: unlocked = savedCount >= 13; break;
+          case 14: unlocked = hasExcellentResult; break;
+        }
+
+        if (!existing) {
+          saved.push({ id: ach.id, unlocked: unlocked, unlockDate: unlocked ? new Date().toLocaleDateString() : null });
+          return { id: ach.id, name: ach.name, desc: ach.desc, unlocked: unlocked, unlockDate: unlocked ? new Date().toLocaleDateString() : null };
+        } else {
+          if (!existing.unlocked && unlocked) {
+            existing.unlocked = true;
+            existing.unlockDate = new Date().toLocaleDateString();
+          }
+          return { id: ach.id, name: ach.name, desc: ach.desc, unlocked: existing.unlocked, unlockDate: existing.unlockDate };
+        }
+      });
+
+      localStorage.setItem('smartgrade_achievements_' + currentUser.id, JSON.stringify(updated));
+
+      var unlockedCount = updated.filter(function(a) { return a.unlocked; }).length;
+      var percent = Math.round((unlockedCount / 14) * 100);
+
+      document.getElementById('progressFill').style.width = percent + '%';
+      document.getElementById('progressFill').innerHTML = percent + '%';
+      document.getElementById('progressText').innerHTML = unlockedCount + '/14 achievements unlocked';
+      document.getElementById('unlockedCount').innerHTML = unlockedCount;
+      document.getElementById('lockedCount').innerHTML = 14 - unlockedCount;
+
+      document.getElementById('badgePreview').innerHTML = updated.map(function(a) {
+        return '<div style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:1rem; background:' + (a.unlocked ? 'linear-gradient(135deg, ' + BADGE_COLORS[a.id] + ', #fff)' : '#ecf0f1') + '; border-radius:50%; color:' + (a.unlocked ? 'white' : '#95a5a6') + ';" title="' + a.name + '">' +
+          '<i class="fas ' + BADGE_ICONS[a.id] + '"></i>' +
+          '</div>';
+      }).join('');
+
+      document.getElementById('achievementsList').innerHTML = updated.map(function(a) {
+        return '<div class="achievement-card ' + (a.unlocked ? 'unlocked' : 'locked') + '">' +
+          '<div class="achievement-icon" style="color:' + (a.unlocked ? BADGE_COLORS[a.id] : '#95a5a6') + ';">' +
+          '<i class="fas ' + BADGE_ICONS[a.id] + '"></i>' +
+          '</div>' +
+          '<div class="achievement-info">' +
+          '<div class="achievement-name">' + a.name + '</div>' +
+          '<div class="achievement-desc">' + a.desc + '</div>' +
+          '<div class="achievement-status ' + (a.unlocked ? 'unlocked-status' : 'locked-status') + '">' +
+          (a.unlocked ? '<i class="fas fa-check-circle"></i> Unlocked: ' + a.unlockDate : '<i class="fas fa-lock"></i> Locked') +
+          '</div>' +
+          '</div>' +
+          '</div>';
+      }).join('');
+
+      var streak = getStudentStreak(currentUser.id);
+      document.getElementById('currentStreak').innerHTML = streak.days;
+      document.getElementById('streakDays').innerHTML = streak.days;
+      document.getElementById('lastLoginDate').innerHTML = streak.lastLogin ? formatDate(streak.lastLogin) : 'Today';
+
+      document.getElementById('streakList').innerHTML = STREAK_BADGES.map(function(sb) {
+        var unlocked = streak.days >= sb.days;
+        return '<div class="streak-card ' + (unlocked ? '' : 'locked') + '">' +
+          '<div class="streak-icon" style="font-size:1.5rem; color:' + (unlocked ? '#f39c12' : '#95a5a6') + ';">' +
+          '<i class="fas fa-' + (sb.days === 3 ? 'seedling' : sb.days === 7 ? 'leaf' : sb.days === 15 ? 'tree' : 'mountain') + '"></i>' +
+          '</div>' +
+          '<div class="streak-info">' +
+          '<div class="streak-name">' + sb.name + '</div>' +
+          '<div class="streak-days">' + sb.desc + ' (' + Math.min(streak.days, sb.days) + '/' + sb.days + ' days)</div>' +
+          '</div>' +
+          '<div style="color:' + (unlocked ? '#2ecc71' : '#95a5a6') + ';">' +
+          '<i class="fas fa-' + (unlocked ? 'check-circle' : 'clock') + '"></i>' +
+          '</div>' +
+          '</div>';
+      }).join('');
+    }
+
+    loadAchievements();
+    initMobileMenu();
+    initThemeSelector();
+
+    window.logout = logout;
+  </script>
+</body>
+</html>

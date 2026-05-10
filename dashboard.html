@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SMART GRADE - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0f3b48">
+  <link rel="apple-touch-icon" href="icon.svg">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  <div class="app-container">
+    <div class="mobile-header">
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+      <div class="header-logo"><i class="fas fa-book-open"></i><span>DASHBOARD</span></div>
+      <div class="theme-btn-header" id="themeBtn"><i class="fas fa-palette"></i><span>Theme</span></div>
+    </div>
+    <div class="sheet-overlay" id="sheetOverlay"></div>
+    <div class="bottom-sheet" id="bottomSheet">
+      <div class="bottom-sheet-header"><h3><i class="fas fa-brush"></i> Choose Theme</h3><button class="close-sheet" id="closeSheet"><i class="fas fa-times"></i></button></div>
+      <div class="bottom-sheet-content"><div class="theme-grid-rect" id="themeGrid"></div><div class="font-row-sheet"><div class="font-sheet" data-font="small">A<sup>-</sup> Small</div><div class="font-sheet" data-font="medium">A Medium</div><div class="font-sheet" data-font="large">A<sup>+</sup> Large</div></div></div>
+    </div>
+    <div class="sidebar-menu" id="sidebarMenu">
+      <div class="sidebar-header"><h3><i class="fas fa-graduation-cap"></i> MENU</h3><button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item active"><i class="fas fa-chalkboard-user"></i> Dashboard</a>
+        <a href="subjects.html" class="nav-item"><i class="fas fa-layer-group"></i> Subjects</a>
+        <a href="add-grade.html" class="nav-item"><i class="fas fa-pen-fancy"></i> Add Grade</a>
+        <a href="term1.html" class="nav-item"><i class="fas fa-1"></i> Term 1</a>
+        <a href="term2.html" class="nav-item"><i class="fas fa-2"></i> Term 2</a>
+        <a href="term3.html" class="nav-item"><i class="fas fa-3"></i> Term 3</a>
+        <a href="yearly.html" class="nav-item"><i class="fas fa-chart-line"></i> Yearly</a>
+        <a href="statistics.html" class="nav-item"><i class="fas fa-chart-pie"></i> Statistics</a>
+        <a href="achievements.html" class="nav-item"><i class="fas fa-medal"></i> Achievements</a>
+        <a href="settings.html" class="nav-item"><i class="fas fa-sliders-h"></i> Settings</a>
+        <a href="guide.html" class="nav-item"><i class="fas fa-question-circle"></i> Guide</a>
+        <a href="about.html" class="nav-item"><i class="fas fa-info-circle"></i> About</a>
+        <a href="#" class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </nav>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <main class="main-content">
+      <div class="motivation-card"><div class="motivation-quote" id="motivationQuote">Loading...</div><div class="motivation-author" id="motivationAuthor"></div></div>
+      <div class="glass-card" style="text-align:center"><h2 id="greeting"></h2><p id="userInfo" style="color:var(--text-light);"></p></div>
+      <div class="danger-alert" id="dangerAlert" style="display:none;"><i class="fas fa-exclamation-triangle"></i><div class="danger-alert-text" id="dangerText"></div></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-value" id="overallAvg">0.00</div><div class="stat-label">OVERALL</div></div>
+        <div class="stat-card"><div class="stat-value" id="totalGrades">0</div><div class="stat-label">GRADES</div></div>
+        <div class="stat-card"><div class="stat-value" id="selectedCount">0</div><div class="stat-label">SUBJECTS</div></div>
+        <div class="stat-card"><div class="stat-value" id="achievementsCount">0</div><div class="stat-label">BADGES</div></div>
+      </div>
+      <div class="goal-card">
+        <h3 style="text-align:center;"><i class="fas fa-bullseye"></i> Your Goal</h3>
+        <div class="goal-value" id="goalValue">12.00</div>
+        <input type="range" class="goal-slider" id="goalSlider" min="10" max="20" step="0.5" value="12" oninput="updateGoal(this.value)">
+        <div class="goal-status" id="goalStatus">Set your target average</div>
+      </div>
+      <div class="glass-card">
+        <h3><i class="fas fa-calendar-alt"></i> Term Averages</h3>
+        <div class="term-grid">
+          <div class="term-card" onclick="location='term1.html'"><div class="term-title">TERM 1</div><div class="term-value" id="term1Avg">0.00</div></div>
+          <div class="term-card" onclick="location='term2.html'"><div class="term-title">TERM 2</div><div class="term-value" id="term2Avg">0.00</div></div>
+          <div class="term-card" onclick="location='term3.html'"><div class="term-title">TERM 3</div><div class="term-value" id="term3Avg">0.00</div></div>
+          <div class="term-card" onclick="location='yearly.html'"><div class="term-title">YEARLY</div><div class="term-value" id="yearlyAvg">0.00</div></div>
+        </div>
+        <div class="scatter-container" style="margin-top:20px;">
+          <h3><i class="fas fa-chart-line"></i> Your Progress</h3>
+          <div class="zoom-controls">
+            <button onclick="zoomChartOut()"><i class="fas fa-search-minus"></i></button>
+            <span class="zoom-level" id="chartZoomLevel">100%</span>
+            <button onclick="zoomChartIn()"><i class="fas fa-search-plus"></i></button>
+            <button onclick="resetChartZoom()"><i class="fas fa-expand"></i></button>
+          </div>
+          <div class="scatter-canvas-wrapper" id="chartWrapper" style="height:250px;overflow:auto;"><canvas id="progressChart" height="250"></canvas></div>
+          <div class="chart-legend"><div class="chart-legend-item"><div class="chart-legend-color" style="background:var(--primary);"></div>Your Average</div><div class="chart-legend-item"><div class="chart-legend-color" style="background:#e74c3c;"></div>Goal: <span id="legendGoal">12</span></div></div>
+        </div>
+      </div>
+      <div class="glass-card">
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px;"><h3><i class="fas fa-layer-group"></i> Your Subjects</h3><a href="subjects.html" style="color:var(--primary);">VIEW ALL <i class="fas fa-arrow-right"></i></a></div>
+        <div id="subjectsPreview"></div>
+      </div>
+      <div class="glass-card" id="exportSection">
+        <h3><i class="fas fa-download"></i> Backup & Sync</h3>
+        <div class="export-import-group"><button class="btn btn-primary" onclick="exportData()"><i class="fas fa-file-export"></i> Export Backup</button><button class="btn btn-secondary" onclick="syncNow()"><i class="fas fa-sync-alt"></i> Sync</button></div>
+        <div id="syncStatus" style="font-size:0.7rem;color:var(--text-light);margin-top:8px;text-align:center;"></div>
+      </div>
+      <div class="glass-card" id="historySection">
+        <h3><i class="fas fa-history"></i> Recent Activity</h3>
+        <div id="historyList"></div>
+      </div>
+      <div class="btn-group"><a href="add-grade.html" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add Grade</a><a href="statistics.html" class="btn btn-secondary"><i class="fas fa-chart-pie"></i> Statistics</a></div>
+    </main>
+  </div>
+  <div id="toastContainer" class="toast-container"></div>
+  <div class="install-prompt" id="installPrompt"><i class="fas fa-mobile-alt"></i><div class="install-prompt-text"><h4>Install SMART GRADE</h4><p>Add this app to your home screen</p></div><button onclick="installApp()">Install</button></div>
+  <script src="js/utils.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    var currentUser=null,progressChart=null,chartZoom=1;
+    var MOTIVATION_QUOTES=[{quote:"Success is not final, failure is not fatal: it is the courage to continue that counts.",author:"Winston Churchill"},{quote:"The future belongs to those who believe in the beauty of their dreams.",author:"Eleanor Roosevelt"},{quote:"Education is the passport to the future, for tomorrow belongs to those who prepare for it today.",author:"Malcolm X"},{quote:"It does not matter how slowly you go as long as you do not stop.",author:"Confucius"},{quote:"The only way to do great work is to love what you do.",author:"Steve Jobs"}];
+
+    function loadDashboard(){
+      currentUser=requireAuth();if(!currentUser)return;
+      document.getElementById('greeting').innerHTML=getGreeting()+', '+currentUser.name+'!';
+      document.getElementById('userInfo').innerHTML='<i class="fas fa-hashtag"></i> '+currentUser.number+' | <i class="fas fa-school"></i> Class '+currentUser.class;
+      var q=MOTIVATION_QUOTES[Math.floor(Math.random()*MOTIVATION_QUOTES.length)];
+      document.getElementById('motivationQuote').innerHTML='<i class="fas fa-quote-right"></i> '+q.quote;
+      document.getElementById('motivationAuthor').innerHTML='- '+q.author;
+      var ct=getCurrentTerm();
+      var as=getActiveSubjectsWithCoefficients(currentUser.id,ct);
+      document.getElementById('selectedCount').innerHTML=as.length;
+      var t1=calculateStudentTermAverage(currentUser.id,1),t2=calculateStudentTermAverage(currentUser.id,2),t3=calculateStudentTermAverage(currentUser.id,3);
+      var yearly=roundToTwo((t1+t2+t3)/3),overall=calculateStudentOverallAverage(currentUser.id);
+      document.getElementById('term1Avg').innerHTML=formatNumber(t1);
+      document.getElementById('term2Avg').innerHTML=formatNumber(t2);
+      document.getElementById('term3Avg').innerHTML=formatNumber(t3);
+      document.getElementById('yearlyAvg').innerHTML=formatNumber(yearly);
+      document.getElementById('overallAvg').innerHTML=formatNumber(overall);
+      var grades=getStudentGrades(currentUser.id);
+      document.getElementById('totalGrades').innerHTML=grades.length;
+      var ach=getStudentAchievements(currentUser.id);
+      document.getElementById('achievementsCount').innerHTML=ach.filter(function(a){return a.unlocked;}).length;
+      var ds=checkDangerSubjects(currentUser.id);
+      var da=document.getElementById('dangerAlert');
+      if(ds.length>0){da.style.display='flex';document.getElementById('dangerText').innerHTML='<strong>Warning:</strong> '+ds.length+' subject(s) below 10/20: '+ds.map(function(s){return s.name;}).join(', ');}else{da.style.display='none';}
+      var goal=getStudentGoal(currentUser.id);
+      document.getElementById('goalValue').innerHTML=formatNumber(goal);
+      document.getElementById('goalSlider').value=goal;
+      document.getElementById('legendGoal').textContent=formatNumber(goal,1);
+      updateGoalStatus(overall,goal);
+      var swa=as.map(function(s){var sg=grades.filter(function(g){return g.subjectId===s.id;});var avg=sg.length?roundToTwo(sg.reduce(function(a,b){return a+b.value;},0)/sg.length):0;return{id:s.id,name:s.name,code:s.code,avg:avg,coeff:s.coefficient};}).sort(function(a,b){return b.avg-a.avg;}).slice(0,5);
+      document.getElementById('subjectsPreview').innerHTML=swa.map(function(s){return'<div class="subject-card" onclick="location.href=\'subject-detail.html?id='+s.id+'\'" style="'+(s.avg<10&&s.avg>0?'border-left:4px solid #e74c3c;':'')+'"><div class="subject-info"><div class="subject-name"><i class="fas fa-book"></i> '+s.name+'</div><div class="subject-meta">Coeff '+s.coeff+'</div></div><div class="subject-avg">'+formatNumber(s.avg)+'</div></div>';}).join('');
+      buildProgressChart(t1,t2,t3,goal);
+      loadHistory();
+      showSyncStatus();
+    }
+
+    function buildProgressChart(t1,t2,t3,goal){
+      if(progressChart)progressChart.destroy();
+      var ctx=document.getElementById('progressChart').getContext('2d');
+      progressChart=new Chart(ctx,{type:'line',data:{labels:['Term 1','Term 2','Term 3'],datasets:[{label:'Your Average',data:[t1,t2,t3],borderColor:getComputedStyle(document.body).getPropertyValue('--primary').trim()||'#0f3b48',backgroundColor:'rgba(0,0,0,0.03)',borderWidth:3,pointRadius:6,pointBackgroundColor:getComputedStyle(document.body).getPropertyValue('--primary').trim()||'#0f3b48',tension:0.3,fill:true},{label:'Goal ('+formatNumber(goal,1)+')',data:[goal,goal,goal],borderColor:'#e74c3c',borderWidth:2,borderDash:[8,4],pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:false,min:0,max:20,ticks:{stepSize:1,callback:function(v){return v;},font:{size:10}},grid:{color:'rgba(0,0,0,0.05)',drawBorder:false}},x:{ticks:{font:{size:11}},grid:{display:false}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(i){return i.dataset.label+': '+formatNumber(i.raw)+'/20';}}}}}});
+    }
+
+    function checkDangerSubjects(sid){var as=getActiveSubjectsWithCoefficients(sid,getCurrentTerm());var g=getStudentGrades(sid);var d=[];as.forEach(function(s){var sg=g.filter(function(x){return x.subjectId===s.id;});if(sg.length>0){var a=roundToTwo(sg.reduce(function(a,b){return a+b.value;},0)/sg.length);if(a>0&&a<10)d.push({name:s.name,avg:a});}});return d;}
+
+    function updateGoal(v){var g=parseFloat(v);saveStudentGoal(currentUser.id,g);document.getElementById('goalValue').innerHTML=formatNumber(g);document.getElementById('legendGoal').textContent=formatNumber(g,1);var o=calculateStudentOverallAverage(currentUser.id);updateGoalStatus(o,g);var t1=calculateStudentTermAverage(currentUser.id,1),t2=calculateStudentTermAverage(currentUser.id,2),t3=calculateStudentTermAverage(currentUser.id,3);buildProgressChart(t1,t2,t3,g);}
+    function updateGoalStatus(o,g){var s=document.getElementById('goalStatus');if(o>=g){s.innerHTML='<i class="fas fa-trophy"></i> Goal achieved!';s.className='goal-status achieved';}else{var n=roundToTwo(g-o);s.innerHTML='<i class="fas fa-arrow-up"></i> Need +'+formatNumber(n);s.className='goal-status not-achieved';}}
+
+    function zoomChartIn(){chartZoom=Math.min(chartZoom+0.25,3);applyChartZoom();}
+    function zoomChartOut(){chartZoom=Math.max(chartZoom-0.25,0.5);applyChartZoom();}
+    function resetChartZoom(){chartZoom=1;applyChartZoom();}
+    function applyChartZoom(){var c=document.getElementById('progressChart'),w=document.getElementById('chartWrapper'),l=document.getElementById('chartZoomLevel');if(c&&w){c.style.transform='scale('+chartZoom+')';c.style.transformOrigin='top left';w.style.height=(250*chartZoom)+'px';}if(l)l.textContent=Math.round(chartZoom*100)+'%';}
+
+    function exportData(){var d=exportAllData(currentUser.id);downloadJSON(d,'SMART_GRADE_Backup_'+currentUser.name.replace(/ /g,'_')+'_'+new Date().toISOString().split('T')[0]+'.json');addHistory(currentUser.id,'Backup exported');showToast('Backup downloaded!');loadHistory();}
+    function syncNow(){var r=simulateSync(currentUser.id);showToast(r.message);showSyncStatus();if(r.synced)loadHistory();}
+    function loadHistory(){var h=getHistory(currentUser.id,10);var c=document.getElementById('historyList');if(h.length===0){c.innerHTML='<p style="text-align:center;color:var(--text-light);font-size:0.7rem;">No activity yet</p>';return;}c.innerHTML=h.map(function(x){return'<div class="history-item"><i class="fas fa-'+(x.action.includes('export')?'file-export':x.action.includes('sync')?'sync-alt':x.action.includes('grade')?'pen':x.action.includes('subject')?'layer-group':'check-circle')+'"></i><span>'+x.action+'</span><span class="history-time">'+formatDate(x.date)+'</span></div>';}).join('');}
+
+    loadDashboard();initMobileMenu();initThemeSelector();
+    window.updateGoal=updateGoal;window.zoomChartIn=zoomChartIn;window.zoomChartOut=zoomChartOut;window.resetChartZoom=resetChartZoom;window.exportData=exportData;window.syncNow=syncNow;window.logout=logout;
+  </script>
+</body>
+</html>

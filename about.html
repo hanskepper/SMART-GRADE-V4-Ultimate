@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SMART GRADE - About</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMART GRADE">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f3b48">
+<link rel="apple-touch-icon" href="icon.svg">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  
+  <div class="app-container">
+    <div class="mobile-header">
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+      <div class="header-logo">
+        <i class="fas fa-book-open"></i>
+        <span>ABOUT</span>
+      </div>
+      <div class="theme-btn-header" id="themeBtn">
+        <i class="fas fa-palette"></i>
+        <span>Theme</span>
+      </div>
+    </div>
+
+    <div class="sheet-overlay" id="sheetOverlay"></div>
+    <div class="bottom-sheet" id="bottomSheet">
+      <div class="bottom-sheet-header">
+        <h3><i class="fas fa-brush"></i> Choose Theme</h3>
+        <button class="close-sheet" id="closeSheet"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="bottom-sheet-content">
+        <div class="theme-grid-rect" id="themeGrid"></div>
+        <div class="font-row-sheet">
+          <div class="font-sheet" data-font="small">A<sup>-</sup> Small</div>
+          <div class="font-sheet" data-font="medium">A Medium</div>
+          <div class="font-sheet" data-font="large">A<sup>+</sup> Large</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-menu" id="sidebarMenu">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-graduation-cap"></i> MENU</h3>
+        <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-item"><i class="fas fa-home"></i> Home</a>
+        <a href="login.html" class="nav-item"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="register.html" class="nav-item"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="dashboard.html" class="nav-item"><i class="fas fa-chalkboard-user"></i> Dashboard</a>
+        <a href="guide.html" class="nav-item"><i class="fas fa-question-circle"></i> Guide</a>
+      </nav>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <main class="main-content">
+      <div class="glass-card" style="text-align:center">
+        <i class="fas fa-info-circle" style="font-size: 60px; color: var(--primary); margin-bottom: 10px;"></i>
+        <h1 class="gradient" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; color: transparent;">SMART GRADE</h1>
+        <p>Ultimate Grade Management System</p>
+        <p style="font-size:0.7rem; margin-top:5px; color: var(--text-light);">Version 4.0 Ultimate</p>
+      </div>
+
+      <div class="glass-card">
+        <h3><i class="fas fa-star"></i> Features</h3>
+        <div style="display:grid; grid-template-columns:1fr; gap:8px;">
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> 14 subjects with customizable coefficients</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> Per-term subject selection</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> 6 sequences / 3 terms</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> Smart rounding system</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> Compensation algorithm</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> Advanced statistics and predictions</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> 14 achievements + 4 streak badges</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> 20 beautiful themes</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> 5 font choices</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> Night mode (auto 18h-6h)</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> Biometric login (fingerprint)</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> PWA installable (offline capable)</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> Sound and vibration feedback</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> Build APK package</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> Grade calculator simulator</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> Student accounts with PIN login</div>
+          <div><i class="fas fa-check-circle" style="color:#2ecc71;"></i> 100% offline - No internet required</div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <h3><i class="fas fa-user-astronaut"></i> Developer</h3>
+        <div style="text-align:center; padding:16px;">
+          <p><strong>HANS KEPPER</strong></p>
+          <p><i class="fas fa-envelope" style="color:#3498db;"></i> hanskepper52@gmail.com</p>
+          <p><i class="fas fa-phone" style="color:#2ecc71;"></i> +237 698 640 885</p>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <h3><i class="fas fa-school"></i> School Information</h3>
+        <div style="text-align:center; padding:16px;">
+          <p><strong>GBHS FOUMBAN</strong></p>
+          <p>Government Bilingual High School, Foumban - Cameroon</p>
+          <p><i class="fas fa-graduation-cap"></i> Class: Form 4B Science</p>
+          <p><i class="fas fa-language"></i> Section: Anglophone</p>
+          <p><i class="fas fa-calendar"></i> Academic Year: 2025-2026</p>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <a href="dashboard.html" class="btn btn-primary"><i class="fas fa-chalkboard-user"></i> Go to Dashboard</a>
+        <a href="login.html" class="btn btn-secondary"><i class="fas fa-sign-in-alt"></i> Login</a>
+      </div>
+    </main>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+  
+  <!-- PWA Install Prompt -->
+<div class="install-prompt" id="installPrompt">
+  <i class="fas fa-mobile-alt"></i>
+  <div class="install-prompt-text">
+    <h4>Install SMART GRADE</h4>
+    <p>Add this app to your home screen for quick access</p>
+  </div>
+  <button onclick="installApp()">Install</button>
+</div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    initParticles();
+    initThemeSelector();
+    initMobileMenu();
+  </script>
+</body>
+</html>

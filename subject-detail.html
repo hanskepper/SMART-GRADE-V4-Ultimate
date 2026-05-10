@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SMART GRADE - Subject Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMART GRADE">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f3b48">
+<link rel="apple-touch-icon" href="icon.svg">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  
+  <div class="app-container">
+    <div class="mobile-header">
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+      <div class="header-logo">
+        <i class="fas fa-book-open"></i>
+        <span id="pageTitle">SUBJECT</span>
+      </div>
+      <div class="theme-btn-header" id="themeBtn">
+        <i class="fas fa-palette"></i>
+        <span>Theme</span>
+      </div>
+    </div>
+
+    <div class="sheet-overlay" id="sheetOverlay"></div>
+    <div class="bottom-sheet" id="bottomSheet">
+      <div class="bottom-sheet-header">
+        <h3><i class="fas fa-brush"></i> Choose Theme</h3>
+        <button class="close-sheet" id="closeSheet"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="bottom-sheet-content">
+        <div class="theme-grid-rect" id="themeGrid"></div>
+        <div class="font-row-sheet">
+          <div class="font-sheet" data-font="small">A<sup>-</sup> Small</div>
+          <div class="font-sheet" data-font="medium">A Medium</div>
+          <div class="font-sheet" data-font="large">A<sup>+</sup> Large</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-menu" id="sidebarMenu">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-graduation-cap"></i> MENU</h3>
+        <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><i class="fas fa-chalkboard-user"></i> Dashboard</a>
+        <a href="subjects.html" class="nav-item"><i class="fas fa-layer-group"></i> Subjects</a>
+        <a href="add-grade.html" class="nav-item"><i class="fas fa-pen-fancy"></i> Add Grade</a>
+        <a href="settings.html" class="nav-item"><i class="fas fa-sliders-h"></i> Settings</a>
+        <a href="#" class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </nav>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <main class="main-content">
+      <div class="glass-card">
+        <div class="term-grid">
+          <div class="term-card"><div class="term-title">TERM 1</div><div class="term-value" id="term1">0.00</div></div>
+          <div class="term-card"><div class="term-title">TERM 2</div><div class="term-value" id="term2">0.00</div></div>
+          <div class="term-card"><div class="term-title">TERM 3</div><div class="term-value" id="term3">0.00</div></div>
+          <div class="term-card"><div class="term-title">YEARLY</div><div class="term-value" id="yearly">0.00</div></div>
+        </div>
+      </div>
+      
+      <div id="gradesContainer"></div>
+      
+      <div class="btn-group">
+        <a href="add-grade.html" id="addGradeLink" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add Grade</a>
+        <a href="subjects.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+      </div>
+    </main>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+  
+  <!-- PWA Install Prompt -->
+<div class="install-prompt" id="installPrompt">
+  <i class="fas fa-mobile-alt"></i>
+  <div class="install-prompt-text">
+    <h4>Install SMART GRADE</h4>
+    <p>Add this app to your home screen for quick access</p>
+  </div>
+  <button onclick="installApp()">Install</button>
+</div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    var urlParams = new URLSearchParams(location.search);
+    var subjectId = parseInt(urlParams.get('id'));
+    var currentUser = null;
+    var subject = null;
+
+    function loadSubject() {
+      currentUser = requireAuth();
+      if (!currentUser) return;
+
+      subject = DEFAULT_SUBJECTS.find(function(s) { return s.id === subjectId; });
+      if (!subject) { window.location.href = 'subjects.html'; return; }
+
+      document.getElementById('pageTitle').innerHTML = subject.name;
+      document.getElementById('addGradeLink').href = 'add-grade.html?subjectId=' + subjectId;
+
+      var grades = getStudentGrades(currentUser.id).filter(function(g) { return g.subjectId === subjectId; });
+
+      var t1 = calculateSubjectTermAverage(subjectId, 1, grades);
+      var t2 = calculateSubjectTermAverage(subjectId, 2, grades);
+      var t3 = calculateSubjectTermAverage(subjectId, 3, grades);
+      var yearly = roundToTwo((t1 + t2 + t3) / 3);
+
+      document.getElementById('term1').innerHTML = formatNumber(t1);
+      document.getElementById('term2').innerHTML = formatNumber(t2);
+      document.getElementById('term3').innerHTML = formatNumber(t3);
+      document.getElementById('yearly').innerHTML = formatNumber(yearly);
+
+      var html = '';
+      for (var seq = 1; seq <= 6; seq++) {
+        var seqGrades = grades.filter(function(g) { return g.sequenceId === seq; });
+        var avg = seqGrades.length ? roundToTwo(seqGrades.reduce(function(a,b) { return a + b.value; }, 0) / seqGrades.length) : 0;
+
+        html += '<div class="glass-card">' +
+          '<h4><i class="fas fa-chart-line"></i> Sequence ' + seq + ' (Term ' + Math.ceil(seq/2) + ') - Average: ' + formatNumber(avg) + '</h4>' +
+          '<div style="margin-top:10px;">' +
+          seqGrades.map(function(g) {
+            return '<div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(0,0,0,0.02); border-radius:12px; margin-bottom:8px;">' +
+              '<span><i class="fas fa-calendar"></i> ' + formatDate(g.date) + '</span>' +
+              '<span><strong>' + formatNumber(g.value) + '/20</strong></span>' +
+              '<div>' +
+              '<button onclick="deleteGrade(' + g.id + ')" style="background:none; border:none; cursor:pointer; color:#e74c3c;"><i class="fas fa-trash"></i></button>' +
+              '</div>' +
+              '</div>';
+          }).join('') +
+          (seqGrades.length === 0 ? '<div style="text-align:center; padding:20px; color:var(--text-light);"><i class="fas fa-inbox"></i> No grades yet</div>' : '') +
+          '</div>' +
+          '</div>';
+      }
+      document.getElementById('gradesContainer').innerHTML = html;
+    }
+
+    function deleteGrade(id) {
+      if (confirm('Delete this grade?')) {
+        deleteGrade(currentUser.id, id);
+        loadSubject();
+        showToast('Grade deleted');
+      }
+    }
+
+    loadSubject();
+    initMobileMenu();
+    initThemeSelector();
+
+    window.deleteGrade = deleteGrade;
+    window.logout = logout;
+  </script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SMART GRADE - Add Grade</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMART GRADE">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f3b48">
+<link rel="apple-touch-icon" href="icon.svg">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  
+  <div class="app-container">
+    <div class="mobile-header">
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+      <div class="header-logo">
+        <i class="fas fa-book-open"></i>
+        <span>ADD GRADE</span>
+      </div>
+      <div class="theme-btn-header" id="themeBtn">
+        <i class="fas fa-palette"></i>
+        <span>Theme</span>
+      </div>
+    </div>
+
+    <div class="sheet-overlay" id="sheetOverlay"></div>
+    <div class="bottom-sheet" id="bottomSheet">
+      <div class="bottom-sheet-header">
+        <h3><i class="fas fa-brush"></i> Choose Theme</h3>
+        <button class="close-sheet" id="closeSheet"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="bottom-sheet-content">
+        <div class="theme-grid-rect" id="themeGrid"></div>
+        <div class="font-row-sheet">
+          <div class="font-sheet" data-font="small">A<sup>-</sup> Small</div>
+          <div class="font-sheet" data-font="medium">A Medium</div>
+          <div class="font-sheet" data-font="large">A<sup>+</sup> Large</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-menu" id="sidebarMenu">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-graduation-cap"></i> MENU</h3>
+        <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><i class="fas fa-chalkboard-user"></i> Dashboard</a>
+        <a href="subjects.html" class="nav-item"><i class="fas fa-layer-group"></i> Subjects</a>
+        <a href="add-grade.html" class="nav-item active"><i class="fas fa-pen-fancy"></i> Add Grade</a>
+        <a href="settings.html" class="nav-item"><i class="fas fa-sliders-h"></i> Settings</a>
+        <a href="#" class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </nav>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <main class="main-content">
+      <div class="glass-card">
+        <div class="term-tabs">
+          <div class="term-tab active" data-term="1"><i class="fas fa-1"></i> Term 1 (S1+S2)</div>
+          <div class="term-tab" data-term="2"><i class="fas fa-2"></i> Term 2 (S3+S4)</div>
+          <div class="term-tab" data-term="3"><i class="fas fa-3"></i> Term 3 (S5+S6)</div>
+        </div>
+        
+        <div style="overflow-x: auto;">
+          <table class="grades-table" id="gradesTable">
+            <thead id="tableHeader"></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+        
+        <button class="btn btn-primary" onclick="saveAllGrades()" style="margin-top:20px;"><i class="fas fa-save"></i> Save All Grades</button>
+      </div>
+    </main>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+  
+  <!-- PWA Install Prompt -->
+<div class="install-prompt" id="installPrompt">
+  <i class="fas fa-mobile-alt"></i>
+  <div class="install-prompt-text">
+    <h4>Install SMART GRADE</h4>
+    <p>Add this app to your home screen for quick access</p>
+  </div>
+  <button onclick="installApp()">Install</button>
+</div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    var currentUser = null;
+    var currentTerm = 1;
+    var subjects = [];
+
+    function loadAddGrade() {
+      currentUser = requireAuth();
+      if (!currentUser) return;
+
+      subjects = getActiveSubjectsWithCoefficients(currentUser.id, currentTerm);
+
+      if (subjects.length === 0) {
+        document.getElementById('tableBody').innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">No subjects selected for Term ' + currentTerm + '. Go to Settings.</td></tr>';
+        return;
+      }
+
+      renderTable();
+    }
+
+    function renderTable() {
+      var grades = getStudentGrades(currentUser.id);
+      var seq1 = (currentTerm - 1) * 2 + 1;
+      var seq2 = seq1 + 1;
+
+      document.getElementById('tableHeader').innerHTML = '<tr><th>Subject</th><th>Coeff</th><th>S' + seq1 + '</th><th>S' + seq2 + '</th><th>Term Avg</th></tr>';
+
+      document.getElementById('tableBody').innerHTML = subjects.map(function(s) {
+        var grade1 = grades.find(function(g) { return g.subjectId === s.id && g.sequenceId === seq1; });
+        var grade2 = grades.find(function(g) { return g.subjectId === s.id && g.sequenceId === seq2; });
+        var val1 = grade1 ? grade1.value : '';
+        var val2 = grade2 ? grade2.value : '';
+        var avg = (val1 !== '' && val2 !== '') ? formatNumber((parseFloat(val1) + parseFloat(val2)) / 2) : '--';
+
+        return '<tr>' +
+          '<td style="text-align:left;"><i class="fas fa-book"></i> ' + s.name + '</td>' +
+          '<td>' + s.coefficient + '</td>' +
+          '<td><input type="number" step="0.01" min="0" max="20" class="grade-input" data-subj="' + s.id + '" data-seq="' + seq1 + '" value="' + val1 + '" placeholder="0-20" style="width:55px;"></td>' +
+          '<td><input type="number" step="0.01" min="0" max="20" class="grade-input" data-subj="' + s.id + '" data-seq="' + seq2 + '" value="' + val2 + '" placeholder="0-20" style="width:55px;"></td>' +
+          '<td><strong class="avg-display" data-subj="' + s.id + '">' + avg + '</strong></td>' +
+          '</tr>';
+      }).join('');
+
+      document.querySelectorAll('.grade-input').forEach(function(input) {
+        input.addEventListener('change', updatePreview);
+      });
+    }
+
+    function updatePreview() {
+      var seq1 = (currentTerm - 1) * 2 + 1;
+      var seq2 = seq1 + 1;
+      document.querySelectorAll('.grade-input').forEach(function(input) {
+        var subj = parseInt(input.dataset.subj);
+        var seq = parseInt(input.dataset.seq);
+        if (seq === seq1 || seq === seq2) {
+          var val1El = document.querySelector('.grade-input[data-subj="' + subj + '"][data-seq="' + seq1 + '"]');
+          var val2El = document.querySelector('.grade-input[data-subj="' + subj + '"][data-seq="' + seq2 + '"]');
+          var val1 = val1El ? val1El.value : '';
+          var val2 = val2El ? val2El.value : '';
+          var avg = (val1 !== '' && val2 !== '') ? formatNumber((parseFloat(val1) + parseFloat(val2)) / 2) : '--';
+          var avgDisplay = document.querySelector('.avg-display[data-subj="' + subj + '"]');
+          if (avgDisplay) avgDisplay.innerHTML = avg;
+        }
+      });
+    }
+
+    function saveAllGrades() {
+      var inputs = document.querySelectorAll('.grade-input');
+      var grades = getStudentGrades(currentUser.id);
+      var changed = false;
+
+      inputs.forEach(function(input) {
+        var subjectId = parseInt(input.dataset.subj);
+        var sequenceId = parseInt(input.dataset.seq);
+        var value = parseFloat(input.value);
+
+        if (!isNaN(value) && value >= 0 && value <= 20) {
+          var existingIndex = grades.findIndex(function(g) {
+            return g.subjectId === subjectId && g.sequenceId === sequenceId;
+          });
+
+          var roundedValue = roundToTwo(value);
+
+          if (existingIndex !== -1) {
+            grades[existingIndex].value = roundedValue;
+            grades[existingIndex].date = new Date().toISOString().split('T')[0];
+          } else {
+            var newId = grades.length > 0 ? Math.max.apply(null, grades.map(function(g) { return g.id; })) + 1 : 1;
+            grades.push({
+              id: newId,
+              subjectId: subjectId,
+              sequenceId: sequenceId,
+              value: roundedValue,
+              date: new Date().toISOString().split('T')[0],
+              notes: ''
+            });
+          }
+          changed = true;
+        }
+      });
+
+      if (changed) {
+        saveStudentGrades(currentUser.id, grades);
+        playActionFeedback();
+        showToast('Grades saved successfully!');
+        renderTable();
+      } else {
+        showToast('No valid grades to save');
+      }
+    }
+
+    document.querySelectorAll('.term-tab').forEach(function(tab, idx) {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.term-tab').forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        currentTerm = idx + 1;
+        subjects = getActiveSubjectsWithCoefficients(currentUser.id, currentTerm);
+        renderTable();
+      });
+    });
+
+    loadAddGrade();
+    initMobileMenu();
+    initThemeSelector();
+
+    window.saveAllGrades = saveAllGrades;
+    window.logout = logout;
+  </script>
+</body>
+</html>

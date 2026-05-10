@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SMART GRADE - Yearly</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <style>.grade-A{color:#2ecc71;font-weight:800;}.grade-B{color:#3498db;font-weight:800;}.grade-C{color:#f39c12;font-weight:800;}.grade-D{color:#e67e22;font-weight:800;}.grade-F{color:#e74c3c;font-weight:800;}</style>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMART GRADE">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f3b48">
+<link rel="apple-touch-icon" href="icon.svg">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  <div class="app-container">
+    <div class="mobile-header"><button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button><div class="header-logo"><i class="fas fa-book-open"></i><span>YEARLY</span></div><div class="theme-btn-header" id="themeBtn"><i class="fas fa-palette"></i><span>Theme</span></div></div>
+    <div class="sheet-overlay" id="sheetOverlay"></div>
+    <div class="bottom-sheet" id="bottomSheet"><div class="bottom-sheet-header"><h3><i class="fas fa-brush"></i> Choose Theme</h3><button class="close-sheet" id="closeSheet"><i class="fas fa-times"></i></button></div><div class="bottom-sheet-content"><div class="theme-grid-rect" id="themeGrid"></div><div class="font-row-sheet"><div class="font-sheet" data-font="small">A<sup>-</sup> Small</div><div class="font-sheet" data-font="medium">A Medium</div><div class="font-sheet" data-font="large">A<sup>+</sup> Large</div></div></div></div>
+    <div class="sidebar-menu" id="sidebarMenu"><div class="sidebar-header"><h3><i class="fas fa-graduation-cap"></i> MENU</h3><button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button></div><nav class="sidebar-nav"><a href="dashboard.html" class="nav-item"><i class="fas fa-chalkboard-user"></i> Dashboard</a><a href="term1.html" class="nav-item"><i class="fas fa-1"></i> Term 1</a><a href="term2.html" class="nav-item"><i class="fas fa-2"></i> Term 2</a><a href="term3.html" class="nav-item"><i class="fas fa-3"></i> Term 3</a><a href="yearly.html" class="nav-item active"><i class="fas fa-chart-line"></i> Yearly</a><a href="#" class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></nav></div>
+    <div class="overlay" id="overlay"></div>
+    <main class="main-content">
+      <div class="glass-card" style="text-align:center"><div class="stat-value" id="overallYearly" style="font-size:2rem;">0.00</div><div class="stat-label">YEARLY OVERALL AVERAGE</div><div id="yearlyGrade" style="font-size:1.5rem;margin-top:10px;"></div></div>
+      <div id="compSummary"></div>
+      <div class="glass-card"><div style="overflow-x:auto;"><table class="grades-table"><thead><tr><th>Subject</th><th>T1</th><th>T2</th><th>T3</th><th>Yearly</th><th>Grade</th></tr></thead><tbody id="tableBody"></tbody></table></div></div>
+    </main>
+  </div>
+  <div id="toastContainer" class="toast-container"></div>
+  <div class="install-prompt" id="installPrompt"><i class="fas fa-mobile-alt"></i><div class="install-prompt-text"><h4>Install SMART GRADE</h4><p>Add this app to your home screen</p></div><button onclick="installApp()">Install</button></div>
+  <script src="js/utils.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    var currentUser=null;
+    function loadYearly(){
+      currentUser=requireAuth();if(!currentUser)return;
+      var allIds={};
+      for(var t=1;t<=3;t++){getStudentSelectedSubjects(currentUser.id,t).forEach(function(id){allIds[id]=true;});}
+      var allSubs=DEFAULT_SUBJECTS.filter(function(s){return allIds[s.id];});
+      var grades=getStudentGrades(currentUser.id);
+      var tbody=document.getElementById('tableBody');
+      var total=0,count=0;
+      tbody.innerHTML=allSubs.map(function(s){
+        var t1=calculateSubjectTermAverage(s.id,1,grades);
+        var t2=calculateSubjectTermAverage(s.id,2,grades);
+        var t3=calculateSubjectTermAverage(s.id,3,grades);
+        var y=roundToTwo((t1+t2+t3)/3);
+        if(y>0){total+=y;count++;}
+        var l=getGradeLetter(y),cl=getGradeClass(y);
+        if(t1===0&&t2===0&&t3===0)return'';
+        return'<tr><td style="text-align:left;"><strong><i class="fas fa-book"></i> '+s.name+'</strong></td><td>'+formatNumber(t1)+'</td><td>'+formatNumber(t2)+'</td><td>'+formatNumber(t3)+'</td><td><strong>'+formatNumber(y)+'</strong></td><td class="'+cl+'"><i class="fas fa-star"></i> '+l+'</td></tr>';
+      }).filter(function(r){return r!=='';}).join('');
+      var overall=count>0?roundToTwo(total/count):0;
+      document.getElementById('overallYearly').innerHTML=formatNumber(overall);
+      document.getElementById('yearlyGrade').innerHTML='<span class="'+getGradeClass(overall)+'" style="font-size:2rem;">'+getGradeLetter(overall)+'</span>';
+      
+      // Compensation summary
+      var summary=document.getElementById('compSummary');
+      var html='';
+      for(var t=1;t<=3;t++){
+        var comp=getCompData(currentUser.id,t);
+        if(comp){
+          var rm=DEFAULT_SUBJECTS.find(function(x){return x.id===comp.removedSubjectId;});
+          html+='<div class="danger-alert"><i class="fas fa-balance-scale"></i><div class="danger-alert-text"><strong>Term '+t+':</strong> '+(rm?rm.name:'Subject')+' removed ('+formatNumber(comp.removedAvg)+'/20). Avg '+formatNumber(comp.termAvgBefore)+' preserved. Adjustment: '+(comp.adjustment>=0?'+':'')+formatNumber(comp.adjustment)+' per subject.</div></div>';
+        }
+      }
+      summary.innerHTML=html;
+    }
+    loadYearly();initMobileMenu();initThemeSelector();window.logout=logout;
+  </script>
+</body>
+</html>

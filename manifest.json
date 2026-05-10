@@ -1,0 +1,30 @@
+{
+  "name": "SMART GRADE - GBHS Foumban",
+  "short_name": "SMART GRADE",
+  "description": "Ultimate Grade Management System for GBHS Foumban Form 4B Science",
+  "start_url": "/SMART-GRADE/index.html",
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#0f3b48",
+  "theme_color": "#0f3b48",
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/SMART-GRADE/",
+  "categories": ["education", "productivity"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

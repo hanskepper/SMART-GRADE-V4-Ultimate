@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SMART GRADE - Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMART GRADE">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f3b48">
+<link rel="apple-touch-icon" href="icon.svg">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  <div class="app-container">
+    <div class="mobile-header">
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+      <div class="header-logo"><i class="fas fa-book-open"></i><span>LOGIN</span></div>
+      <div class="theme-btn-header" id="themeBtn"><i class="fas fa-palette"></i><span>Theme</span></div>
+    </div>
+    <div class="sheet-overlay" id="sheetOverlay"></div>
+    <div class="bottom-sheet" id="bottomSheet">
+      <div class="bottom-sheet-header"><h3><i class="fas fa-brush"></i> Choose Theme</h3><button class="close-sheet" id="closeSheet"><i class="fas fa-times"></i></button></div>
+      <div class="bottom-sheet-content"><div class="theme-grid-rect" id="themeGrid"></div><div class="font-row-sheet"><div class="font-sheet" data-font="small">A<sup>-</sup> Small</div><div class="font-sheet" data-font="medium">A Medium</div><div class="font-sheet" data-font="large">A<sup>+</sup> Large</div></div></div>
+    </div>
+    <div class="sidebar-menu" id="sidebarMenu">
+      <div class="sidebar-header"><h3><i class="fas fa-graduation-cap"></i> MENU</h3><button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button></div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-item"><i class="fas fa-home"></i> Home</a>
+        <a href="login.html" class="nav-item active"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="register.html" class="nav-item"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="guide.html" class="nav-item"><i class="fas fa-question-circle"></i> Guide</a>
+      </nav>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <main class="main-content">
+      <div class="glass-card" style="text-align:center">
+        <i class="fas fa-graduation-cap" style="font-size:50px;color:var(--primary);margin-bottom:10px;"></i>
+        <h2 style="background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;background-clip:text;color:transparent;">Welcome Back</h2>
+        <p style="color:var(--text-light);">Sign in with fingerprint or PIN</p>
+      </div>
+      <div class="glass-card">
+        <button class="fingerprint-btn" id="fpBtn" onclick="handleFP()"><i class="fas fa-fingerprint"></i></button>
+        <p style="text-align:center;font-size:0.65rem;color:var(--text-light);margin-bottom:10px;"><i class="fas fa-shield-alt"></i> Use fingerprint for instant login</p>
+        <div style="text-align:center;margin-bottom:15px;font-size:0.7rem;color:var(--text-light);"><span style="background:rgba(0,0,0,0.05);padding:4px 12px;border-radius:20px;">OR</span></div>
+        <div id="errorMsg" style="background:#fdeded;color:#e74c3c;padding:10px;border-radius:12px;margin-bottom:15px;display:none;"></div>
+        <div id="successMsg" style="background:#d5f5e3;color:#27ae60;padding:10px;border-radius:12px;margin-bottom:15px;display:none;"></div>
+        <div class="form-group"><label><i class="fas fa-user"></i> Select account</label><select id="userSelect" class="form-input"><option value="">-- Select your name --</option></select></div>
+        <div class="form-group"><label><i class="fas fa-lock"></i> PIN (4 digits)</label><input type="password" id="pinInput" maxlength="4" placeholder="****" class="form-input" inputmode="numeric"></div>
+        <button class="btn btn-primary" onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+        <div style="text-align:center;margin-top:16px;"><a href="register.html" style="color:var(--primary);font-size:0.8rem;">Create new account</a></div>
+      </div>
+    </main>
+  </div>
+  <div id="toastContainer" class="toast-container"></div>
+  <div class="install-prompt" id="installPrompt"><i class="fas fa-mobile-alt"></i><div class="install-prompt-text"><h4>Install SMART GRADE</h4><p>Add this app to your home screen</p></div><button onclick="installApp()">Install</button></div>
+  <script src="js/utils.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function loadUsers(){
+      var s=getAllStudents();
+      var sel=document.getElementById('userSelect');
+      sel.innerHTML='<option value="">-- Select your name --</option>'+s.map(function(x){return '<option value="'+x.id+'">'+x.name+' ('+x.class+' #'+x.number+')'+(x.hasFingerprint?' <i class="fas fa-fingerprint" style="color:#27ae60;"></i>':'')+'</option>';}).join('');
+    }
+    function showError(m){var d=document.getElementById('errorMsg');d.innerHTML='<i class="fas fa-circle-exclamation"></i> '+m;d.style.display='block';document.getElementById('successMsg').style.display='none';setTimeout(function(){d.style.display='none';},4000);}
+    function showSuccess(m){var d=document.getElementById('successMsg');d.innerHTML='<i class="fas fa-check-circle"></i> '+m;d.style.display='block';document.getElementById('errorMsg').style.display='none';}
+    function goDash(student){setCurrentStudent(student);updateStreakOnVisit(student.id);playActionFeedback();showSuccess('Welcome '+student.name+'!');setTimeout(function(){location='dashboard.html';},800);}
+
+    function handleLogin(){
+      var id=parseInt(document.getElementById('userSelect').value);
+      var pin=document.getElementById('pinInput').value;
+      if(!id){showError('Select your account');return;}
+      var r=authenticateWithPin(id,pin);
+      if(r.success){goDash(r.student);}else{showError(r.message);}
+    }
+
+    function handleFP(){
+      var btn=document.getElementById('fpBtn');
+      var students=getAllStudents();
+      var studentsFP=students.filter(function(s){return s.hasFingerprint;});
+
+      if(studentsFP.length===0){showError('No accounts with fingerprint found. Use PIN.');return;}
+
+      btn.classList.add('authenticating');
+
+      // Try WebAuthn if available
+      if(typeof PublicKeyCredential!=='undefined'){
+        loginWithFingerprint(function(result){
+          btn.classList.remove('authenticating');
+          if(result.success){goDash(result.student);}else{showError(result.message);}
+        });
+      } else {
+        // Fallback: auto-login with first fingerprint account
+        setTimeout(function(){
+          btn.classList.remove('authenticating');
+          var student=studentsFP[0];
+          document.getElementById('userSelect').value=student.id;
+          if(studentsFP.length===1){goDash(student);}
+          else{showSuccess('Multiple accounts. First selected: '+student.name+'. Click Sign In or change account.');}
+        },1500);
+      }
+    }
+
+    document.getElementById('pinInput').addEventListener('keydown',function(e){if(e.key==='Enter')handleLogin();});
+    loadUsers();
+    initMobileMenu();
+    initThemeSelector();
+  </script>
+</body>
+</html>
